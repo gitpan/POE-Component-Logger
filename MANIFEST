@@ -1,0 +1,7 @@
+Changes
+MANIFEST
+MANIFEST.SKIP
+Makefile.PL
+README
+lib/POE/Component/Logger.pm
+t/00basic.t
