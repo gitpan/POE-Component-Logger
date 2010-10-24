@@ -1,0 +1,11 @@
+Changes for POE-Component-Logger.
+
+1.00_01 2010-10-24  Olivier Mengué (DOLMEN)
+	Developer release.
+	Repository is now hosted on GitHub: http://github.com/dolmen/POE-Component-Logger
+	Added test suite (with some TODO items).
+	Renammed private subs with '_' prefix.
+	More meta in Makefile.PL
+
+1.00    2002-01-10  Matt Sergeant (MSERGEANT)
+	Intitial revision.

@@ -1,5 +1,3 @@
-# $Id: Logger.pm,v 1.1.1.1 2002/01/10 20:48:53 matt Exp $
-
 package POE::Component::Logger;
 use strict;
 
@@ -8,7 +6,7 @@ use Log::Dispatch::Config;
 
 use vars qw($VERSION $DefaultLevel);
 
-$VERSION = '1.00';
+$VERSION = '1.00_01';
 
 $DefaultLevel = 'warning';
 
@@ -16,46 +14,46 @@ sub spawn {
     my $class = shift;
     POE::Session->create(
         inline_states => {
-            _start => \&start_logger,
-            _stop => \&stop_logger,
-            
+            _start => \&_start_logger,
+            _stop => \&_stop_logger,
+
             # more states here for logging of different levels?
-            log => \&poe_log,
-            debug => sub { local $DefaultLevel='debug'; poe_log(@_)},
-            info => sub { local $DefaultLevel='info'; poe_log(@_)},
-            notice => sub { local $DefaultLevel='notice'; poe_log(@_)},
-            warning => sub {local $DefaultLevel='warning'; poe_log(@_)},
-            error => sub { local $DefaultLevel='error';poe_log(@_)},
-            critical => sub { local $DefaultLevel='critical';poe_log(@_)},
-            alert => sub { local $DefaultLevel='alert';poe_log(@_)},
-            emergency => sub {local $DefaultLevel='emergency';poe_log(@_)},
+            log => \&_poe_log,
+            debug =>     sub { local $DefaultLevel='debug';     _poe_log(@_) },
+            info =>      sub { local $DefaultLevel='info';      _poe_log(@_) },
+            notice =>    sub { local $DefaultLevel='notice';    _poe_log(@_) },
+            warning =>   sub { local $DefaultLevel='warning';   _poe_log(@_) },
+            error =>     sub { local $DefaultLevel='error';     _poe_log(@_) },
+            critical =>  sub { local $DefaultLevel='critical';  _poe_log(@_) },
+            alert =>     sub { local $DefaultLevel='alert';     _poe_log(@_) },
+            emergency => sub { local $DefaultLevel='emergency'; _poe_log(@_) },
         },
         args => [ @_ ],
     );
 }
 
-sub start_logger {
+sub _start_logger {
     my ($kernel, $heap, %args) = @_[KERNEL, HEAP, ARG0 .. $#_];
-    
+
     $args{Alias} ||= 'logger';
-    
+
     Log::Dispatch::Config->configure($args{ConfigFile});
-    
+
     $heap->{_logger} = Log::Dispatch->instance;
     $heap->{_alias} = $args{Alias};
     $kernel->alias_set($args{Alias});
 }
 
-sub stop_logger {
+sub _stop_logger {
     my ($kernel, $heap) = @_[KERNEL, HEAP];
-    
+
     $kernel->alias_remove($heap->{_alias});
     delete $heap->{_logger};
 }
 
-sub poe_log {
+sub _poe_log {
     my ($heap, $arg0, @args) = @_[HEAP, ARG0, ARG1..$#_];
-    
+
     if (ref($arg0)) {
         $heap->{_logger}->log(%$arg0);
     }
@@ -71,7 +69,7 @@ sub log {
     my $class = shift;
     POE::Session->create(
         inline_states => {
-            _start => \&start_logging,
+            _start => \&_start_logging,
         },
         args => [ @_ ],
     );
@@ -79,7 +77,7 @@ sub log {
 
 *Logger::log = \&log;
 
-sub start_logging {
+sub _start_logging {
     my ($kernel, @args) = @_[KERNEL, ARG0..$#_];
     $kernel->post(logger => log => @args);
 }

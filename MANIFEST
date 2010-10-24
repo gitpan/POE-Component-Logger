@@ -1,7 +1,16 @@
+.gitignore
 Changes
+lib/POE/Component/Logger.pm
+Makefile.PL
 MANIFEST
 MANIFEST.SKIP
-Makefile.PL
 README
-lib/POE/Component/Logger.pm
 t/00basic.t
+t/10pre-log.t
+t/11pre-log2.t
+t/15simple.t
+t/60-RT62397.t
+t/lib/Log/Dispatch/Config/Test.pm
+t/lib/Log/Dispatch/Configurator/Static.pm
+t/lib/Log/Dispatch/Expect.pm
+META.yml                                 Module meta-data (added by MakeMaker)

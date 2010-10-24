@@ -1,4 +1,5 @@
 CVS/.*
+^\.git/
 \.bak$
 \.sw[a-z]$
 \.tar$
@@ -11,3 +12,4 @@ CVS/.*
 ^Makefile\.[a-z]+$
 ^pm_to_blib$
 ~$
+^POE-Component-Logger-*
