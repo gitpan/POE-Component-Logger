@@ -1,4 +1,4 @@
-use 5.008;
+use 5.006;
 use strict;
 
 use ExtUtils::MakeMaker;
@@ -27,7 +27,7 @@ WriteMakefile1(
     },
     META_MERGE => {
         resources => {
-            repository => 'git:git@github.com/dolmen/POE-Component-Logger',
+            repository => 'http://github.com/dolmen/POE-Component-Logger',
             homepage => 'http://github.com/dolmen/POE-Component-Logger',
         },
     },

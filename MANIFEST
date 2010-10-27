@@ -6,9 +6,11 @@ MANIFEST
 MANIFEST.SKIP
 README
 t/00basic.t
+t/01-pod.t
 t/10pre-log.t
 t/11pre-log2.t
 t/15simple.t
+t/16-alias.t
 t/60-RT62397.t
 t/lib/Log/Dispatch/Config/Test.pm
 t/lib/Log/Dispatch/Configurator/Static.pm

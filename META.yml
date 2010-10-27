@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               POE-Component-Logger
-version:            1.00_01
+version:            1.00_02
 abstract:           A POE logging class
 author:
     - Matt Sergeant <matt@sergeant.org>
@@ -22,7 +22,7 @@ requires:
     POE:                  1.293
 resources:
     homepage:    http://github.com/dolmen/POE-Component-Logger
-    repository:  git:git@github.com/dolmen/POE-Component-Logger
+    repository:  http://github.com/dolmen/POE-Component-Logger
 no_index:
     directory:
         - t

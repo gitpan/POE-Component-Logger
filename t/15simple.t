@@ -4,7 +4,7 @@
 use strict;
 use warnings;
 use Test::NoWarnings;
-use Test::More tests => 38;
+use Test::More tests => 46;
 
 my @tests;
 
@@ -13,8 +13,8 @@ BEGIN {
         { level => warning => message => '1. Warning' },
         { level => error => message => '2. Error' },
         { level => warning => message => '3. Warning' },
-        { level => error => message => '4. Error', TODO => 'Fix this race case' },
-        { level => critical => message => '5. Critical', TODO => 'Fix this race case' },
+        { level => error => message => '4. Error', TODO => 'Race condition (RT#62397)' },
+        { level => critical => message => '5. Critical', TODO => 'Race condition (RT#62397)' },
         { level => warning => message => '6. Warning' },
         { level => warning => message => '7. Warning' },
         { level => debug => message => '8. Debug' },
@@ -25,6 +25,10 @@ BEGIN {
         { level => critical => message => '13. Critical' },
         { level => alert => message => '14. Alert' },
         { level => emergency => message => '15. Emergency' },
+
+        { level =>     error => message => '30. Error'     },
+        { level => emergency => message => '31. Emergency' },
+        { level =>     alert => message => '32. Alert'     },
     );
 }
 
@@ -37,6 +41,8 @@ is $POE::Component::Logger::DefaultLevel, 'warning', 'DefaultLevel';
 
 POE::Component::Logger->spawn(
     ConfigFile => t::lib::Log::Dispatch::Config::Test->configurator);
+
+isnt $poe_kernel->alias_resolve('logger'), undef, "'logger' session exists";
 
 is $POE::Component::Logger::DefaultLevel, 'warning', 'DefaultLevel';
 
@@ -86,6 +92,18 @@ POE::Session->create(
             $poe_kernel->post('logger', 'critical', '13. Critical');
             $poe_kernel->post('logger', 'alert', '14. Alert');
             $poe_kernel->post('logger', 'emergency', '15. Emergency');
+
+            $poe_kernel->yield('evt6');
+        },
+        evt6 => sub {
+            is $POE::Component::Logger::DefaultLevel, 'warning', 'DefaultLevel';
+
+            # Expect error level, ignoring $DefaultLevel
+            $poe_kernel->post(logger => log => { level => error => message => '30. Error' });
+            # Expect emergency level, ignoring the level as given in the POE event
+            $poe_kernel->post(logger => critical => { level => emergency => message => '31. Emergency' });
+            # Expect alert level, ignoring $DefaultLevel
+            Logger->log({ level => alert => message => '32. Alert' });
         },
         _stop => sub {
             pass "_stop";
