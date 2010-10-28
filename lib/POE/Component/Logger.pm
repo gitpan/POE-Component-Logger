@@ -6,7 +6,7 @@ use Log::Dispatch::Config;
 
 use vars qw($VERSION $DefaultLevel);
 
-$VERSION = '1.00_02';
+$VERSION = '1.01';
 
 $DefaultLevel = 'warning';
 

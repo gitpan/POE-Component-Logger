@@ -1,5 +1,9 @@
 Changes for POE-Component-Logger.
 
+1.01    2010-10-28  Olivier Mengué (DOLMEN)
+	Public release, same as 1.00_02.
+	Add ROADMAP file for future releases 1.10 and 1.50.
+
 1.00_02 2010-10-27  Olivier Mengué (DOLMEN)
 	Developer release.
 	Major internal improvement: remove the creation of a temporary
@@ -10,7 +14,8 @@ Changes for POE-Component-Logger.
 
 1.00_01 2010-10-24  Olivier Mengué (DOLMEN)
 	Developer release.
-	Repository is now hosted on GitHub: http://github.com/dolmen/POE-Component-Logger
+	Repository is now hosted on GitHub:
+          http://github.com/dolmen/POE-Component-Logger
 	Added test suite (with some TODO items).
 	Renammed private subs with '_' prefix.
 	More meta in Makefile.PL.

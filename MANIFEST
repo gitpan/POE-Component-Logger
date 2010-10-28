@@ -5,6 +5,7 @@ Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 README
+ROADMAP
 t/00basic.t
 t/01-pod.t
 t/10pre-log.t
