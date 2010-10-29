@@ -26,7 +26,7 @@ use POE::Component::Logger;
 is $POE::Component::Logger::DefaultLevel, 'warning', 'DefaultLevel';
 
 my $log_alias = 'mylog';
-is $poe_kernel->alias_resolve($log_alias), undef, "'logger' session exists";
+is $poe_kernel->alias_resolve($log_alias), undef, "'logger' session doesn't exists";
 
 POE::Component::Logger->spawn(
     Alias => $log_alias,

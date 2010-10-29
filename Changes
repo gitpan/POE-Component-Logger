@@ -1,5 +1,14 @@
 Changes for POE-Component-Logger.
 
+1.10    2010-10-30  Olivier Mengué (DOLMEN)
+	Public release.
+	Major refactoring: code is smaller and cleaner.
+	Fix for RT#62397: $DefaultLevel is now retrieved immediately (when
+	  using the Logger->log or P:C:L->log) instead of at event
+	  processing time. This allows the use of a temporary definition
+	  of $DefaultLevel (with 'local'). This should make the API more
+	  consistent with the usual usage of global variables.
+
 1.01    2010-10-28  Olivier Mengué (DOLMEN)
 	Public release, same as 1.00_02.
 	Add ROADMAP file for future releases 1.10 and 1.50.

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               POE-Component-Logger
-version:            1.01
+version:            1.10
 abstract:           A POE logging class
 author:
     - Matt Sergeant <matt@sergeant.org>

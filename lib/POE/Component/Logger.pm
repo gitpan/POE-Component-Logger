@@ -6,7 +6,7 @@ use Log::Dispatch::Config;
 
 use vars qw($VERSION $DefaultLevel);
 
-$VERSION = '1.01';
+$VERSION = '1.10';
 
 $DefaultLevel = 'warning';
 
@@ -17,16 +17,17 @@ sub spawn {
             _start => \&_start_logger,
             _stop => \&_stop_logger,
 
-            # more states here for logging of different levels?
-            log => \&_poe_log,
-            debug =>     sub { local $DefaultLevel='debug';     _poe_log(@_) },
-            info =>      sub { local $DefaultLevel='info';      _poe_log(@_) },
-            notice =>    sub { local $DefaultLevel='notice';    _poe_log(@_) },
-            warning =>   sub { local $DefaultLevel='warning';   _poe_log(@_) },
-            error =>     sub { local $DefaultLevel='error';     _poe_log(@_) },
-            critical =>  sub { local $DefaultLevel='critical';  _poe_log(@_) },
-            alert =>     sub { local $DefaultLevel='alert';     _poe_log(@_) },
-            emergency => sub { local $DefaultLevel='emergency'; _poe_log(@_) },
+            # Log at the $DefaultLevel
+            log =>       sub { my @args = @_; $args[STATE] = $DefaultLevel; _poe_log(@args) },
+            # Log at a specific level
+            debug =>     \&_poe_log,
+            info =>      \&_poe_log,
+            notice =>    \&_poe_log,
+            warning =>   \&_poe_log,
+            error =>     \&_poe_log,
+            critical =>  \&_poe_log,
+            alert =>     \&_poe_log,
+            emergency => \&_poe_log,
         },
         args => [ @_ ],
     );
@@ -39,7 +40,7 @@ sub _start_logger {
 
     Log::Dispatch::Config->configure($args{ConfigFile});
 
-    $heap->{_logger} = Log::Dispatch->instance;
+    $heap->{_logger} = Log::Dispatch::Config->instance;
     $heap->{_alias} = $args{Alias};
     $kernel->alias_set($args{Alias});
 }
@@ -51,23 +52,25 @@ sub _stop_logger {
     delete $heap->{_logger};
 }
 
-sub _poe_log {
-    my ($heap, $arg0, @args) = @_[HEAP, ARG0, ARG1..$#_];
 
-    if (ref($arg0)) {
-        $heap->{_logger}->log(%$arg0);
-    }
-    else {
-        $heap->{_logger}->log(
-            level => $DefaultLevel,
-            message => join('', $arg0, @args),
-            );
-    }
+sub _poe_log {
+    my ($heap, $level, $arg0, @args) = @_[HEAP, STATE, ARG0..$#_];
+
+    $heap->{_logger}->log(
+        # The default level is the POE event name ($_[STATE])
+        # (may be overriden in given hashref)
+        level => $level,
+        # If we get a HASHREF, expand it
+        # If we get a scalar, concatenate args as the message
+        (ref $arg0) ? (%{$arg0})
+                    : (message => join('', $arg0, @args))
+    );
 }
+
 
 sub log {
     my ($class, @args) = @_;
-    POE::Kernel->post(logger => log => @args);
+    POE::Kernel->post(logger => $DefaultLevel => @args);
 }
 
 *Logger::log = \&log;
